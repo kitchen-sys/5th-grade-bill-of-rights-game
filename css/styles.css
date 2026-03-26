@@ -1,0 +1,439 @@
+/* ========================================
+   Capitol Boxes — Base Styles & Layout
+   ======================================== */
+
+:root {
+  /* Background & Surface */
+  --bg-primary: #1a1f2e;
+  --bg-surface: #242b3d;
+  --bg-board: #2a3245;
+
+  /* Player Colors (colorblind-safe: blue vs orange) */
+  --player-color: #4a9eff;
+  --player-fill: rgba(74, 158, 255, 0.15);
+  --player-fill-solid: #2a4a6e;
+  --ai-color: #ff8c42;
+  --ai-fill: rgba(255, 140, 66, 0.15);
+  --ai-fill-solid: #6e4a2a;
+
+  /* Accents */
+  --gold: #d4a84b;
+  --cream: #f0e6d0;
+  --correct: #4ecb71;
+  --incorrect: #e74c5f;
+
+  /* Dots & Lines */
+  --dot-color: #8899aa;
+  --dot-hover: #ffffff;
+  --edge-undrawn: #3a4558;
+  --edge-drawn: #c0cad8;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================================
+   Screen System
+   ======================================== */
+
+.screen {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   Menu Screen
+   ======================================== */
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 2rem;
+  gap: 2.5rem;
+}
+
+.menu-header {
+  text-align: center;
+}
+
+.menu-icon {
+  font-size: 3.5rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.menu-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.menu-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--cream);
+  opacity: 0.7;
+  margin-top: 0.5rem;
+}
+
+.menu-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.menu-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cream);
+  opacity: 0.6;
+}
+
+.difficulty-buttons {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.diff-btn {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 2px solid var(--edge-undrawn);
+  border-radius: 8px;
+  padding: 1rem 0.75rem;
+  color: var(--cream);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-family: var(--font-body);
+}
+
+.diff-btn .diff-name {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.diff-btn .diff-desc {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.diff-btn:hover {
+  border-color: var(--gold);
+  background: var(--bg-board);
+}
+
+.diff-btn.selected {
+  border-color: var(--gold);
+  background: rgba(212, 168, 75, 0.15);
+}
+
+.start-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: var(--gold);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.start-button:hover {
+  background: #e0b85e;
+  transform: translateY(-1px);
+}
+
+.menu-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.4;
+}
+
+/* ========================================
+   Game Header
+   ======================================== */
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--edge-undrawn);
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon {
+  font-size: 1.4rem;
+  color: var(--gold);
+}
+
+.header-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.difficulty-dropdown {
+  background: var(--bg-primary);
+  color: var(--cream);
+  border: 1px solid var(--edge-undrawn);
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* ========================================
+   Game Layout
+   ======================================== */
+
+.game-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ========================================
+   Score Panel (Sidebar)
+   ======================================== */
+
+.score-panel {
+  width: 200px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--edge-undrawn);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.score-card {
+  text-align: center;
+}
+
+.score-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+.player-score-card .score-label {
+  color: var(--player-color);
+}
+
+.ai-score-card .score-label {
+  color: var(--ai-color);
+}
+
+.score-number {
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.player-score-card .score-number {
+  color: var(--player-color);
+}
+
+.ai-score-card .score-number {
+  color: var(--ai-color);
+}
+
+.score-bar-container {
+  height: 6px;
+  background: var(--bg-primary);
+  border-radius: 3px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.score-bar {
+  height: 100%;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.player-bar {
+  background: var(--player-color);
+}
+
+.ai-bar {
+  background: var(--ai-color);
+}
+
+.score-divider {
+  height: 1px;
+  background: var(--edge-undrawn);
+}
+
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.stat-label {
+  opacity: 0.6;
+}
+
+.stat-value {
+  font-weight: 700;
+}
+
+#streak-value {
+  color: var(--gold);
+}
+
+/* ========================================
+   Board Area
+   ======================================== */
+
+.board-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--bg-board);
+}
+
+/* ========================================
+   Status Bar
+   ======================================== */
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--edge-undrawn);
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.help-button {
+  background: none;
+  border: 1px solid var(--edge-undrawn);
+  color: var(--cream);
+  opacity: 0.6;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: opacity 0.2s;
+}
+
+.help-button:hover {
+  opacity: 1;
+}
+
+.status-message {
+  font-size: 0.95rem;
+  color: var(--cream);
+  opacity: 0.85;
+  transition: opacity 0.3s;
+  text-align: right;
+  flex: 1;
+  margin-left: 1rem;
+}
+
+.status-message.ai-speaking {
+  color: var(--ai-color);
+  font-style: italic;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes correctFlash {
+  0% { background-color: var(--correct); }
+  100% { background-color: transparent; }
+}
+
+@keyframes incorrectFlash {
+  0% { background-color: var(--incorrect); }
+  100% { background-color: transparent; }
+}
+
+@keyframes boxClaim {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

@@ -1,0 +1,308 @@
+/* ========================================
+   Capitol Boxes — End-Game Report
+   ======================================== */
+
+#report-screen {
+  overflow-y: auto;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.report-container {
+  width: 100%;
+  max-width: 700px;
+  background: var(--bg-surface);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ========================================
+   Report Header
+   ======================================== */
+
+.report-header {
+  text-align: center;
+  padding: 2rem 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--edge-undrawn);
+}
+
+.report-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.report-scores {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.report-score-card {
+  text-align: center;
+}
+
+.report-score-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+.report-score-number {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.report-score-unit {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 0.25rem;
+}
+
+.report-vs {
+  font-size: 1.2rem;
+  opacity: 0.5;
+  font-weight: 700;
+}
+
+.report-result {
+  margin-top: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+}
+
+.report-result.victory {
+  color: var(--correct);
+}
+
+.report-result.defeat {
+  color: var(--incorrect);
+}
+
+.report-result.tie {
+  color: var(--gold);
+}
+
+/* ========================================
+   Knowledge Report Section
+   ======================================== */
+
+.report-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--edge-undrawn);
+}
+
+.report-section:last-child {
+  border-bottom: none;
+}
+
+.report-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+/* Summary Stats */
+.report-stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.report-stat {
+  text-align: center;
+}
+
+.report-stat-number {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.report-stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+  margin-top: 0.25rem;
+}
+
+/* Category Bars */
+.category-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.category-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.category-icon.perfect {
+  color: var(--correct);
+}
+
+.category-icon.partial {
+  color: var(--gold);
+}
+
+.category-icon.none {
+  color: var(--incorrect);
+}
+
+.category-name {
+  width: 160px;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.category-bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--bg-primary);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.category-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+
+.category-bar-fill.perfect {
+  background: var(--correct);
+}
+
+.category-bar-fill.partial {
+  background: var(--gold);
+}
+
+.category-bar-fill.none {
+  background: var(--incorrect);
+}
+
+.category-pct {
+  width: 45px;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.category-fraction {
+  width: 35px;
+  text-align: right;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* ========================================
+   Missed Questions Review
+   ======================================== */
+
+.missed-question {
+  background: var(--bg-primary);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--incorrect);
+}
+
+.missed-question:last-child {
+  margin-bottom: 0;
+}
+
+.missed-q-text {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.missed-answer {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 0.25rem;
+}
+
+.missed-answer .label {
+  opacity: 0.6;
+}
+
+.missed-answer.your-answer {
+  color: var(--incorrect);
+}
+
+.missed-answer.correct-answer {
+  color: var(--correct);
+}
+
+.missed-explanation {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--edge-undrawn);
+}
+
+/* ========================================
+   Report Buttons
+   ======================================== */
+
+.report-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  padding: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.report-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid;
+}
+
+.report-btn.primary {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg-primary);
+}
+
+.report-btn.primary:hover {
+  background: #e0b85e;
+}
+
+.report-btn.secondary {
+  background: transparent;
+  border-color: var(--edge-undrawn);
+  color: var(--cream);
+}
+
+.report-btn.secondary:hover {
+  border-color: var(--cream);
+}

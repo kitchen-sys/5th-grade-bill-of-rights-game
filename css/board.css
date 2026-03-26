@@ -1,0 +1,154 @@
+/* ========================================
+   Capitol Boxes — Board Rendering
+   ======================================== */
+
+.board-container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+}
+
+/* ========================================
+   Dots
+   ======================================== */
+
+.dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--dot-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ========================================
+   Edges (clickable lines)
+   ======================================== */
+
+.edge {
+  position: absolute;
+  z-index: 5;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-radius: 2px;
+}
+
+/* Horizontal edges */
+.edge.horizontal {
+  height: 8px;
+  transform: translateY(-50%);
+}
+
+.edge.horizontal::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+}
+
+/* Vertical edges */
+.edge.vertical {
+  width: 8px;
+  transform: translateX(-50%);
+}
+
+.edge.vertical::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  top: 0;
+  bottom: 0;
+}
+
+/* Undrawn state */
+.edge.undrawn {
+  background-color: var(--edge-undrawn);
+  opacity: 0.4;
+}
+
+.edge.undrawn:hover {
+  background-color: var(--dot-hover);
+  opacity: 0.8;
+}
+
+/* Drawn states */
+.edge.drawn {
+  cursor: default;
+  opacity: 1;
+}
+
+.edge.drawn.player-edge {
+  background-color: var(--player-color);
+  box-shadow: 0 0 6px rgba(74, 158, 255, 0.4);
+}
+
+.edge.drawn.ai-edge {
+  background-color: var(--ai-color);
+  box-shadow: 0 0 6px rgba(255, 140, 66, 0.4);
+}
+
+.edge.drawn.last-placed {
+  animation: edgePlace 0.3s ease;
+}
+
+@keyframes edgePlace {
+  0% { opacity: 0; transform: scaleX(0.3) translateY(-50%); }
+  100% { opacity: 1; transform: scaleX(1) translateY(-50%); }
+}
+
+.edge.vertical.drawn.last-placed {
+  animation-name: edgePlaceV;
+}
+
+@keyframes edgePlaceV {
+  0% { opacity: 0; transform: scaleY(0.3) translateX(-50%); }
+  100% { opacity: 1; transform: scaleY(1) translateX(-50%); }
+}
+
+/* Disabled during AI turn / question phase */
+.edge.disabled {
+  pointer-events: none;
+}
+
+/* ========================================
+   Boxes
+   ======================================== */
+
+.box {
+  position: absolute;
+  z-index: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.box.claimed {
+  opacity: 1;
+  animation: boxClaim 0.35s ease;
+}
+
+.box.player-box {
+  background-color: var(--player-fill);
+  border: 1px solid rgba(74, 158, 255, 0.3);
+  color: var(--player-color);
+}
+
+.box.ai-box {
+  background-color: var(--ai-fill);
+  border: 1px solid rgba(255, 140, 66, 0.3);
+  color: var(--ai-color);
+}
+
+.box .box-marker {
+  opacity: 0.7;
+}
