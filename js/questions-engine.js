@@ -36,9 +36,29 @@ function getNextQuestion() {
   return QUESTION_BANK.find(function(q) { return q.id === qId; });
 }
 
+function showBonusQuestion() {
+  if (gameState.phase === 'question' || gameState.phase === 'game-over') return;
+
+  // Save current turn state so we can restore after bonus
+  gameState.savedTurnState = {
+    phase: gameState.phase,
+    currentTurn: gameState.currentTurn
+  };
+  gameState.isBonusQuestion = true;
+  gameState.pendingBoxes = [];
+
+  setStatusMessage("Bonus question time!");
+
+  var q = getNextQuestion();
+  setTimeout(function() {
+    showQuestion(q);
+  }, 400);
+}
+
 function showQuestion(question) {
   gameState.currentQuestion = question;
   gameState.phase = 'question';
+  pauseBonusTimer();
   setEdgesInteractive(false);
 
   var modal = document.getElementById('question-modal');
@@ -53,7 +73,11 @@ function showQuestion(question) {
   timerBar.style.width = '100%';
   timerBar.className = 'timer-bar';
 
-  categoryEl.textContent = CATEGORY_LABELS[question.category] || question.category;
+  var categoryLabel = CATEGORY_LABELS[question.category] || question.category;
+  if (gameState.isBonusQuestion) {
+    categoryLabel = '\u23F0 Bonus Question \u2014 ' + categoryLabel;
+  }
+  categoryEl.textContent = categoryLabel;
   questionText.textContent = question.question;
 
   // Build options
@@ -154,6 +178,53 @@ function handleAnswer(selectedIndex) {
   // Visual feedback
   showAnswerFeedback(selectedIndex, question.answer, correct, question.explanation);
 
+  // Check if this is a bonus (timed interval) question
+  if (gameState.isBonusQuestion) {
+    var bonusDelay = correct ? 2000 : 2500;
+    setTimeout(function() {
+      // Close modal
+      var modal = document.getElementById('question-modal');
+      modal.classList.remove('visible');
+      modal.setAttribute('aria-hidden', 'true');
+
+      gameState.isBonusQuestion = false;
+      updateScoreDisplay();
+
+      if (correct) {
+        showAiQuip('playerCorrect');
+      } else {
+        showAiQuip('playerIncorrect');
+      }
+
+      // Restore prior turn state
+      var saved = gameState.savedTurnState;
+      gameState.savedTurnState = null;
+
+      if (isGameOver()) {
+        endGame();
+        return;
+      }
+
+      if (saved) {
+        gameState.phase = saved.phase;
+        gameState.currentTurn = saved.currentTurn;
+        if (saved.currentTurn === 'player' && saved.phase === 'playing') {
+          setEdgesInteractive(true);
+          setStatusMessage("Your turn \u2014 pick a line!");
+        } else if (saved.currentTurn === 'ai' && saved.phase === 'playing') {
+          setTimeout(doAiTurn, 600);
+        }
+      } else {
+        gameState.phase = 'playing';
+        gameState.currentTurn = 'player';
+        setEdgesInteractive(true);
+      }
+
+      resumeBonusTimer();
+    }, bonusDelay);
+    return;
+  }
+
   // Resolve the pending box
   var pendingBox = gameState.pendingBoxes.shift();
 
@@ -202,6 +273,8 @@ function handleAnswer(selectedIndex) {
       showAiQuip('playerIncorrect');
       setTimeout(doAiTurn, 600);
     }
+
+    resumeBonusTimer();
   }, delay);
 }
 
@@ -227,4 +300,51 @@ function showAnswerFeedback(selected, correctIdx, isCorrect, explanation) {
 
 function isGameOver() {
   return Object.keys(gameState.boxes).length >= TOTAL_BOXES;
+}
+
+/* ========================================
+   Bonus Question Timer (every 30 seconds)
+   ======================================== */
+
+function startBonusTimer() {
+  stopBonusTimer();
+  gameState.bonusTimerLastTick = Date.now();
+  gameState.bonusTimerInterval = setInterval(function() {
+    if (gameState.phase === 'game-over') {
+      stopBonusTimer();
+      return;
+    }
+    // Only fire if we're in normal play (not already in a question)
+    if (gameState.phase === 'playing') {
+      showBonusQuestion();
+    }
+  }, BONUS_QUESTION_INTERVAL);
+}
+
+function pauseBonusTimer() {
+  if (gameState.bonusTimerInterval) {
+    clearInterval(gameState.bonusTimerInterval);
+    gameState.bonusTimerInterval = null;
+  }
+}
+
+function resumeBonusTimer() {
+  if (gameState.phase === 'game-over') return;
+  pauseBonusTimer();
+  gameState.bonusTimerInterval = setInterval(function() {
+    if (gameState.phase === 'game-over') {
+      stopBonusTimer();
+      return;
+    }
+    if (gameState.phase === 'playing') {
+      showBonusQuestion();
+    }
+  }, BONUS_QUESTION_INTERVAL);
+}
+
+function stopBonusTimer() {
+  if (gameState.bonusTimerInterval) {
+    clearInterval(gameState.bonusTimerInterval);
+    gameState.bonusTimerInterval = null;
+  }
 }

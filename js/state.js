@@ -8,6 +8,7 @@ var DOT_ROWS = GRID_ROWS + 1;  // 5
 var DOT_COLS = GRID_COLS + 1;  // 5
 var TOTAL_BOXES = GRID_ROWS * GRID_COLS;  // 16
 var TIMER_DURATION = 15000;  // 15 seconds
+var BONUS_QUESTION_INTERVAL = 30000;  // 30 seconds
 
 var gameState = null;
 
@@ -33,6 +34,10 @@ function createInitialState(difficulty) {
     aiDifficulty: difficulty || 'medium',
     aiName: 'Senator Square',
     timerDuration: TIMER_DURATION,
+    bonusTimerInterval: null,
+    bonusTimerLastTick: null,
+    isBonusQuestion: false,
+    savedTurnState: null,
     gameStartTime: Date.now(),
     gameEndTime: null
   };

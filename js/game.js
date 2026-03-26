@@ -104,12 +104,14 @@ function startGame(difficulty) {
     initBoard();
     setEdgesInteractive(true);
     showAiQuip('gameStart');
+    startBonusTimer();
   }, 50);
 }
 
 function endGame() {
   gameState.phase = 'game-over';
   gameState.gameEndTime = Date.now();
+  stopBonusTimer();
   setEdgesInteractive(false);
 
   // Show end quip
